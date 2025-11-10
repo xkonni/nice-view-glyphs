@@ -1,4 +1,5 @@
-name: 'zmk-shield-nice!view-custom'
+name: 'zmk-shield-nice!view-nice-view-custom'
 build:
   settings:
+
     board_root: .
