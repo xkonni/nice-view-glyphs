@@ -23,33 +23,8 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
 #include "peripheral_status.h"
 
-LV_IMG_DECLARE(corro01);
-LV_IMG_DECLARE(corro02);
-LV_IMG_DECLARE(corro03);
-LV_IMG_DECLARE(corro04);
-LV_IMG_DECLARE(corro05);
-LV_IMG_DECLARE(corro06);
-LV_IMG_DECLARE(corro07);
-LV_IMG_DECLARE(corro08);
-LV_IMG_DECLARE(corro09);
-LV_IMG_DECLARE(corro10);
-LV_IMG_DECLARE(corro11);
-LV_IMG_DECLARE(corro12);
-
-const lv_img_dsc_t *anim_imgs[] = {
-    &corro01,
-    &corro02,
-    &corro03,
-    &corro04,
-    &corro05,
-    &corro06,
-    &corro07,
-    &corro08,
-    &corro09,
-    &corro10,
-    &corro11,
-    &corro12,
-};
+/* Static keebart image (rotated variant may have replaced original in art.c) */
+LV_IMG_DECLARE(keebart);
 
 static sys_slist_t widgets = SYS_SLIST_STATIC_INIT(&widgets);
 
@@ -144,14 +119,9 @@ int zmk_widget_status_init(struct zmk_widget_status *widget, lv_obj_t *parent) {
     //lv_img_set_src(art, random ? &balloon : &mountain);
     //lv_img_set_src(art, &corro01);
 
-    lv_obj_t * art = lv_animimg_create(widget->obj);            //<--
-    lv_obj_center(art);                                         //<--
-    lv_animimg_set_src(art, (const void **) anim_imgs, 12);     //<--
-    lv_animimg_set_duration(art, 4800);                         //<--
-    lv_animimg_set_repeat_count(art, LV_ANIM_REPEAT_INFINITE);  //<--
-    lv_animimg_start(art);                                      //<--
-
+    lv_obj_t *art = lv_img_create(widget->obj);
     lv_obj_align(art, LV_ALIGN_TOP_LEFT, 0, 0);
+    lv_img_set_src(art, &keebart);
     sys_slist_append(&widgets, &widget->node);
     widget_battery_status_init();
     widget_peripheral_status_init();
