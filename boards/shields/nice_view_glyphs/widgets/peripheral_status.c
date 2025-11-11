@@ -1,13 +1,10 @@
 /*
- *
  * Copyright (c) 2023 The ZMK Contributors
  * SPDX-License-Identifier: MIT
- *
  */
 
 #include <zephyr/kernel.h>
 #include <zephyr/random/random.h>
-
 #include <zephyr/logging/log.h>
 LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
@@ -23,33 +20,16 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
 #include "peripheral_status.h"
 
-LV_IMG_DECLARE(corro01);
-LV_IMG_DECLARE(corro02);
-LV_IMG_DECLARE(corro03);
-LV_IMG_DECLARE(corro04);
-LV_IMG_DECLARE(corro05);
-LV_IMG_DECLARE(corro06);
-LV_IMG_DECLARE(corro07);
-LV_IMG_DECLARE(corro08);
-LV_IMG_DECLARE(corro09);
-LV_IMG_DECLARE(corro10);
-LV_IMG_DECLARE(corro11);
-LV_IMG_DECLARE(corro12);
-
-const lv_img_dsc_t *anim_imgs[] = {
-    &corro01,
-    &corro02,
-    &corro03,
-    &corro04,
-    &corro05,
-    &corro06,
-    &corro07,
-    &corro08,
-    &corro09,
-    &corro10,
-    &corro11,
-    &corro12,
-};
+LV_IMG_DECLARE(pattern1);
+LV_IMG_DECLARE(pattern2);
+LV_IMG_DECLARE(pattern3);
+LV_IMG_DECLARE(pattern4);
+LV_IMG_DECLARE(pattern5);
+LV_IMG_DECLARE(pattern6);
+LV_IMG_DECLARE(pattern7);
+LV_IMG_DECLARE(pattern8);
+LV_IMG_DECLARE(pattern9);
+LV_IMG_DECLARE(pattern10);
 
 static sys_slist_t widgets = SYS_SLIST_STATIC_INIT(&widgets);
 
@@ -86,7 +66,6 @@ static void set_battery_status(struct zmk_widget_status *widget,
 #endif /* IS_ENABLED(CONFIG_USB_DEVICE_STACK) */
 
     widget->state.battery = state.level;
-
     draw_top(widget->obj, widget->cbuf, &widget->state);
 }
 
@@ -119,7 +98,6 @@ static struct peripheral_status_state get_state(const zmk_event_t *_eh) {
 static void set_connection_status(struct zmk_widget_status *widget,
                                   struct peripheral_status_state state) {
     widget->state.connected = state.connected;
-
     draw_top(widget->obj, widget->cbuf, &widget->state);
 }
 
@@ -144,18 +122,33 @@ int zmk_widget_status_init(struct zmk_widget_status *widget, lv_obj_t *parent) {
     //lv_img_set_src(art, random ? &balloon : &mountain);
     //lv_img_set_src(art, &corro01);
 
-    lv_obj_t * art = lv_animimg_create(widget->obj);            //<--
-    lv_obj_center(art);                                         //<--
-    lv_animimg_set_src(art, (const void **) anim_imgs, 12);     //<--
-    lv_animimg_set_duration(art, 4800);                         //<--
-    lv_animimg_set_repeat_count(art, LV_ANIM_REPEAT_INFINITE);  //<--
-    lv_animimg_start(art);                                      //<--
-
+    lv_obj_t *art = lv_img_create(widget->obj);
     lv_obj_align(art, LV_ALIGN_TOP_LEFT, 0, 0);
+    /* Select image based on Kconfig NICE_VIEW_WIDGET_PATTERN (1-10=patternN) */
+#if CONFIG_NICE_VIEW_WIDGET_PATTERN == 1
+    lv_img_set_src(art, &pattern1);
+#elif CONFIG_NICE_VIEW_WIDGET_PATTERN == 2
+    lv_img_set_src(art, &pattern2);
+#elif CONFIG_NICE_VIEW_WIDGET_PATTERN == 3
+    lv_img_set_src(art, &pattern3);
+#elif CONFIG_NICE_VIEW_WIDGET_PATTERN == 4
+    lv_img_set_src(art, &pattern4);
+#elif CONFIG_NICE_VIEW_WIDGET_PATTERN == 5
+    lv_img_set_src(art, &pattern5);
+#elif CONFIG_NICE_VIEW_WIDGET_PATTERN == 6
+    lv_img_set_src(art, &pattern6);
+#elif CONFIG_NICE_VIEW_WIDGET_PATTERN == 7
+    lv_img_set_src(art, &pattern7);
+#elif CONFIG_NICE_VIEW_WIDGET_PATTERN == 8
+    lv_img_set_src(art, &pattern8);
+#elif CONFIG_NICE_VIEW_WIDGET_PATTERN == 9
+    lv_img_set_src(art, &pattern9);
+#elif CONFIG_NICE_VIEW_WIDGET_PATTERN == 10
+    lv_img_set_src(art, &pattern10);
+#endif
     sys_slist_append(&widgets, &widget->node);
     widget_battery_status_init();
     widget_peripheral_status_init();
-
     return 0;
 }
 
